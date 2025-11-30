@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: seafile
+  namespace: seafile
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: seafile
+  template:
+    metadata:
+      labels:
+        app: seafile
+    spec:
+      containers:
+        - name: seafile
+          image: seafileltd/seafile-mc:11.0-latest
+          env:
+            - name: DB_HOST
+              value: "mariadb"
+            - name: DB_ROOT_PASSWD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secret
+                  key: DB_ROOT_PASSWD
+            - name: MYSQL_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mariadb-secret
+                  key: MYSQL_USER_PASSWORD
+            - name: TIME_ZONE
+              valueFrom:
+                secretKeyRef:
+                  name: seafile-secret
+                  key: TIME_ZONE
+            - name: SEAFILE_ADMIN_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: seafile-secret
+                  key: SEAFILE_ADMIN_EMAIL
+            - name: SEAFILE_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: seafile-secret
+                  key: SEAFILE_ADMIN_PASSWORD
+            - name: SEAFILE_SERVER_LETSENCRYPT
+              value: "false"
+            - name: SEAFILE_SERVER_HOSTNAME
+              valueFrom:
+                secretKeyRef:
+                  name: seafile-secret
+                  key: SEAFILE_SERVER_HOSTNAME
+            - name: SEAFILE_SERVER_PROTOCOL
+              valueFrom:
+                secretKeyRef:
+                  name: seafile-secret
+                  key: SEAFILE_SERVER_PROTOCOL
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+          volumeMounts:
+            - name: seafile-data
+              mountPath: /shared
+      volumes:
+        - name: seafile-data
+          persistentVolumeClaim:
+            claimName: seafile-data
+      restartPolicy: Always
+      # to get image from protected repository
+      imagePullSecrets:
+        - name: regcred

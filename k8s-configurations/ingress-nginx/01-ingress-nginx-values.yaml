@@ -1,0 +1,31 @@
+# Configuration for Nginx Ingress Controller with MetalLB
+# This will be used if installing via Helm
+
+controller:
+  # Service configuration - will get IP from MetalLB
+  service:
+    type: LoadBalancer
+    annotations:
+      metallb.universe.tf/allow-shared-ip: "ingress"
+    # MetalLB will assign an IP from your pool (192.168.0.180-199)
+    # Expected IP: 192.168.0.181 or next available
+    
+  # Enable metrics for monitoring
+  metrics:
+    enabled: true
+    
+  # Resource limits
+  resources:
+    requests:
+      cpu: 100m
+      memory: 90Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+      
+  # Configuration for proper IP forwarding
+  config:
+    use-forwarded-headers: "true"
+    compute-full-forwarded-for: "true"
+    use-proxy-protocol: "false"
+

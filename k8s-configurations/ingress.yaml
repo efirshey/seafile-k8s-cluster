@@ -1,0 +1,44 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: seafile-ingress
+  namespace: seafile
+  annotations:
+    # Use nginx ingress controller
+    kubernetes.io/ingress.class: nginx
+    
+    # SSL redirect - force HTTPS
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+
+    # cert-manager annotation - request SSL certificate automatically
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    
+    # Proxy settings for Seafile
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-buffering: "off"
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+    
+    # Backend protocol (tell Ingress backend uses HTTP)
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+
+spec:
+  rules:
+    # Replace with your actual domain
+    - host: filekeeper-local.tplinkdns.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: seafile
+                port:
+                  number: 80
+
+  # TLS configuration (uncomment after cert-manager is installed)
+  tls:
+    - hosts:
+        - filekeeper-local.tplinkdns.com
+      secretName: seafile-tls-cert
+
