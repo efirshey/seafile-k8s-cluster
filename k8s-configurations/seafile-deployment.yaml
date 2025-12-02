@@ -22,12 +22,12 @@ spec:
             - name: DB_ROOT_PASSWD
               valueFrom:
                 secretKeyRef:
-                  name: mariadb-secret
+                  name: seafile-secret
                   key: DB_ROOT_PASSWD
             - name: MYSQL_USER_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mariadb-secret
+                  name: seafile-secret
                   key: MYSQL_USER_PASSWORD
             - name: TIME_ZONE
               valueFrom:
@@ -68,10 +68,16 @@ spec:
           volumeMounts:
             - name: seafile-data
               mountPath: /shared
+            - name: seafile-config
+              mountPath: /shared/seafile/conf/seafile.conf
+              subPath: seafile.conf
       volumes:
         - name: seafile-data
           persistentVolumeClaim:
             claimName: seafile-data
+        - name: seafile-config
+          configMap:
+            name: seafile-config
       restartPolicy: Always
       # to get image from protected repository
       imagePullSecrets:
