@@ -8,7 +8,7 @@ pm_tls_insecure = true
 # Each VM can have different resources
 vms = {
   "vm-name-1" = {
-    node_name      = "pve-1"
+    node_name      = "pve"
     clone_vm_id    = 102        # Template VM ID
     cores          = 4          # CPU cores
     memory         = 4096       # Memory in MB
@@ -19,7 +19,7 @@ vms = {
     network_bridge = "vmbr0"
   }
   "vm-name-2" = {
-    node_name      = "pve-1"
+    node_name      = "pve"
     clone_vm_id    = 102
     cores          = 2
     memory         = 2048

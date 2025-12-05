@@ -34,9 +34,9 @@ metadata:
 spec:
   selector:
     app: seafile
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 80
+      targetPort: 30000
 ---

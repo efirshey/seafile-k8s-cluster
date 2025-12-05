@@ -1,6 +1,14 @@
 # Proxmox Terraform Configuration
 
-This Terraform configuration deploys Talos Linux VMs on Proxmox.
+This Terraform configuration deploys VMs on Proxmox from ISO images.
+
+## ISO-Based Deployment
+
+VMs are created from scratch and boot from ISO files instead of cloning templates. This approach:
+- ✅ Allows fresh OS installations
+- ✅ No need to maintain VM templates
+- ✅ Easy to test different OS versions
+- ⚠️ Requires manual installation or automated provisioning (cloud-init)
 
 ## Files Structure
 
@@ -73,13 +81,13 @@ terraform destroy
 
 The configuration uses a `vms` map variable that allows you to create multiple VMs with different resources. Each VM is defined as a separate entry in the map.
 
-### Example: 3 VMs with Different Resources
+### Example: 3 VMs with Different Resources (ISO-based)
 
 ```hcl
 vms = {
   "talos-controlplane" = {
-    node_name      = "pve-1"
-    clone_vm_id    = 102
+    node_name      = "pve"
+    iso_file       = "local:iso/talos-amd64.iso"
     cores          = 4           # More powerful for control plane
     memory         = 4096
     disk_size      = 50
@@ -89,8 +97,8 @@ vms = {
     network_bridge = "vmbr0"
   }
   "talos-worker-1" = {
-    node_name      = "pve-1"
-    clone_vm_id    = 102
+    node_name      = "pve"
+    iso_file       = "local:iso/talos-amd64.iso"
     cores          = 2           # Standard worker resources
     memory         = 2048
     disk_size      = 32
@@ -100,8 +108,8 @@ vms = {
     network_bridge = "vmbr0"
   }
   "talos-worker-2" = {
-    node_name      = "pve-1"
-    clone_vm_id    = 102
+    node_name      = "pve"
+    iso_file       = "local:iso/talos-amd64.iso"
     cores          = 2
     memory         = 2048
     disk_size      = 32
@@ -117,8 +125,8 @@ vms = {
 
 | Field | Description | Example |
 |-------|-------------|---------|
-| `node_name` | Proxmox node to deploy on | `pve-1` |
-| `clone_vm_id` | Template VM ID to clone | `102` |
+| `node_name` | Proxmox node to deploy on | `pve` |
+| `iso_file` | ISO file path in Proxmox | `local:iso/talos-amd64.iso` |
 | `cores` | Number of CPU cores | `2`, `4`, `8` |
 | `memory` | Memory in MB | `2048`, `4096` |
 | `disk_size` | Disk size in GB | `32`, `50` |
@@ -126,6 +134,17 @@ vms = {
 | `disk_storage` | Storage location | `local-lvm` |
 | `network_model` | Network model | `virtio` |
 | `network_bridge` | Network bridge | `vmbr0` |
+
+### ISO File Setup
+
+Before deploying VMs, upload your ISO files to Proxmox:
+
+1. **Via Web UI**: Datacenter → Storage (local) → ISO Images → Upload
+2. **Via SSH**: Copy to `/var/lib/vz/template/iso/` on Proxmox host
+3. **Download URL**: Use Proxmox web UI to download from URL
+
+**ISO Path Format**: `<storage>:iso/<filename>`
+- Examples: `local:iso/talos-amd64.iso`, `local:iso/ubuntu-22.04.iso`
 
 ## Managing VMs
 
@@ -137,8 +156,8 @@ Simply add a new entry to the `vms` map in `terraform.tfvars`:
 vms = {
   # ... existing VMs ...
   "my-new-vm" = {
-    node_name      = "pve-1"
-    clone_vm_id    = 102
+    node_name      = "pve"
+    iso_file       = "local:iso/talos-amd64.iso"
     cores          = 2
     memory         = 2048
     disk_size      = 32
@@ -171,7 +190,7 @@ You can spread VMs across multiple Proxmox nodes:
 ```hcl
 vms = {
   "vm-on-node-1" = {
-    node_name = "pve-1"
+    node_name = "pve"
     # ... rest of config
   }
   "vm-on-node-2" = {

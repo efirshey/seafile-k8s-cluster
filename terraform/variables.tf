@@ -26,20 +26,20 @@ variable "pm_tls_insecure" {
 variable "vms" {
   description = "Map of VMs to create with their configurations"
   type = map(object({
-    node_name    = string
-    clone_vm_id  = number
-    cores        = number
-    memory       = number
-    disk_size    = number
-    disk_type    = string
-    disk_storage = string
-    network_model = string
+    node_name      = string
+    iso_file       = string
+    cores          = number
+    memory         = number
+    disk_size      = number
+    disk_type      = string
+    disk_storage   = string
+    network_model  = string
     network_bridge = string
   }))
   default = {
     "talos-linux-vm" = {
-      node_name      = "pve-1"
-      clone_vm_id    = 102
+      node_name      = "pve"
+      iso_file       = "local:iso/talos-amd64.iso"
       cores          = 2
       memory         = 2048
       disk_size      = 32

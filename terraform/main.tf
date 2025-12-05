@@ -16,17 +16,19 @@ provider "proxmox" {
 
 resource "proxmox_virtual_environment_vm" "vms" {
     for_each = var.vms
+    stop_on_destroy = false
 
     name      = each.key
     node_name = each.value.node_name
 
-    clone {
-        vm_id = each.value.clone_vm_id
-        full  = true
+    # Boot from ISO instead of cloning
+    cdrom {
+        file_id = each.value.iso_file
     }
 
     cpu {
         cores = each.value.cores
+        type  = "host"  # Use host CPU for x86-64-v2 support required by Talos
     }
 
     memory {
@@ -46,5 +48,6 @@ resource "proxmox_virtual_environment_vm" "vms" {
         bridge = each.value.network_bridge
     }
 
+    # Start VM after creation (will boot from ISO)
     started = true
 }
