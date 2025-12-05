@@ -1,3 +1,26 @@
+# Environment files
 .env
+
+# Kubernetes secrets and configs
 cluster-nodes/
 k8s-configurations/secrets.yaml
+k8s-configurations/seafile-config.conf
+seafile-config.conf
+
+# Terraform files
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+
+# Terraform plan files
+*.tfplan
