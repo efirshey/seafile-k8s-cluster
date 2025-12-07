@@ -1,26 +1,52 @@
 # Proxmox Connection Settings
-pm_api_url      = "https://192.168.1.229:8006/api2/json"
+pm_api_url      = "https://192.168.1.229:8006/"
 pm_user         = "root@pam"
 pm_password     = "your-password-here"
 pm_tls_insecure = true
 
-# VM Configuration - Define multiple VMs here
-# Each VM can have different resources
+# Talos Cluster Configuration
+cluster_name       = "talos-k8s-cluster"
+cluster_endpoint   = "192.168.0.101"  # Control plane IP
+controlplane_ip    = "192.168.0.101"
+talos_version      = "v1.11.5"
+kubernetes_version = "v1.34.1"
+
+# Network Configuration
+network_interface = "ens18"
+network_gateway   = "192.168.0.1"
+network_cidr      = 24
+nameservers       = ["192.168.0.1", "8.8.8.8"]
+install_disk      = "/dev/sda"
+
+# Worker Nodes Configuration - Add as many as you need
+worker_nodes = {
+  "worker-1" = {
+    ip       = "192.168.0.102"
+    hostname = "talos-worker-1"
+  }
+  "worker-2" = {
+    ip       = "192.168.0.103"
+    hostname = "talos-worker-2"
+  }
+  # Add more workers as needed...
+}
+
+# VM Configuration - Must match worker_nodes + 1 control plane
 vms = {
-  "vm-name-1" = {
+  "talos-controlplane" = {
     node_name      = "pve"
-    clone_vm_id    = 102        # Template VM ID
-    cores          = 4          # CPU cores
-    memory         = 4096       # Memory in MB
-    disk_size      = 50         # Disk size in GB
+    iso_file       = "local:iso/talos-linux.iso"
+    cores          = 4
+    memory         = 4096
+    disk_size      = 50
     disk_type      = "scsi0"
     disk_storage   = "local-lvm"
     network_model  = "virtio"
     network_bridge = "vmbr0"
   }
-  "vm-name-2" = {
+  "talos-worker-1" = {
     node_name      = "pve"
-    clone_vm_id    = 102
+    iso_file       = "local:iso/talos-linux.iso"
     cores          = 2
     memory         = 2048
     disk_size      = 32
@@ -29,6 +55,5 @@ vms = {
     network_model  = "virtio"
     network_bridge = "vmbr0"
   }
-  # Add more VMs as needed...
+  # Add more worker VMs to match worker_nodes...
 }
-
