@@ -24,6 +24,8 @@ spec:
                 secretKeyRef:
                   name: seafile-secret
                   key: DB_ROOT_PASSWD
+            - name: MYSQL_USER
+              value: "seafile"
             - name: MYSQL_USER_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -72,19 +74,13 @@ spec:
             limits:
               memory: "2Gi"
               cpu: "1000m"
-      #     volumeMounts:
-      #       - name: seafile-data
-      #         mountPath: /shared
-      #       - name: seafile-config
-      #         mountPath: /shared/seafile/conf/seafile.conf
-      #         subPath: seafile.conf
-      # volumes:
-      #   - name: seafile-data
-      #     persistentVolumeClaim:
-      #       claimName: seafile-data
-      #   - name: seafile-config
-      #     configMap:
-      #       name: seafile-config
+          volumeMounts:
+            - name: seafile-data
+              mountPath: /shared
+      volumes:
+        - name: seafile-data
+          persistentVolumeClaim:
+            claimName: seafile-data
       restartPolicy: Always
       # to get image from protected repository
       imagePullSecrets:
