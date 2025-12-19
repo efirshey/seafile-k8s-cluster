@@ -56,6 +56,13 @@ spec:
                 secretKeyRef:
                   name: seafile-secret
                   key: SEAFILE_SERVER_PROTOCOL
+            # Debug mode - enables detailed logging
+            - name: DEBUG
+              value: "true"
+            - name: SEAFILE_DEBUG
+              value: "true"
+            - name: PYTHONUNBUFFERED
+              value: "1"
           ports:
             - containerPort: 80
           resources:
@@ -65,19 +72,19 @@ spec:
             limits:
               memory: "2Gi"
               cpu: "1000m"
-          volumeMounts:
-            - name: seafile-data
-              mountPath: /shared
-            - name: seafile-config
-              mountPath: /shared/seafile/conf/seafile.conf
-              subPath: seafile.conf
-      volumes:
-        - name: seafile-data
-          persistentVolumeClaim:
-            claimName: seafile-data
-        - name: seafile-config
-          configMap:
-            name: seafile-config
+      #     volumeMounts:
+      #       - name: seafile-data
+      #         mountPath: /shared
+      #       - name: seafile-config
+      #         mountPath: /shared/seafile/conf/seafile.conf
+      #         subPath: seafile.conf
+      # volumes:
+      #   - name: seafile-data
+      #     persistentVolumeClaim:
+      #       claimName: seafile-data
+      #   - name: seafile-config
+      #     configMap:
+      #       name: seafile-config
       restartPolicy: Always
       # to get image from protected repository
       imagePullSecrets:

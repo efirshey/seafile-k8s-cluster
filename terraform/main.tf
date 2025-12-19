@@ -4,10 +4,6 @@ terraform {
             source  = "bpg/proxmox"
             version = "~> 0.50"
         }
-        talos = {
-            source  = "siderolabs/talos"
-            version = "~> 0.6"
-        }
     }
 }
 
@@ -32,7 +28,7 @@ resource "proxmox_virtual_environment_vm" "vms" {
 
     cpu {
         cores = each.value.cores
-        type  = "host"  # Use host CPU for x86-64-v2 support required by Talos
+        type  = "host"
     }
 
     memory {

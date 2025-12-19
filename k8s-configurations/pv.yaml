@@ -4,7 +4,7 @@ metadata:
   name: mariadb-data
 spec:
   capacity:
-    storage: 10Gi
+    storage: 100Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
@@ -16,7 +16,7 @@ metadata:
   name: seafile-data
 spec:
   capacity:
-    storage: 10Gi
+    storage: 100Gi
   accessModes:
     - ReadWriteOnce
   hostPath:

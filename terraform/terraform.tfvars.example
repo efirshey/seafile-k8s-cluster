@@ -4,36 +4,9 @@ pm_user         = "root@pam"
 pm_password     = "your-password-here"
 pm_tls_insecure = true
 
-# Talos Cluster Configuration
-cluster_name       = "talos-k8s-cluster"
-cluster_endpoint   = "192.168.0.101"  # Control plane IP
-controlplane_ip    = "192.168.0.101"
-talos_version      = "v1.11.5"
-kubernetes_version = "v1.34.1"
-
-# Network Configuration
-network_interface = "ens18"
-network_gateway   = "192.168.0.1"
-network_cidr      = 24
-nameservers       = ["192.168.0.1", "8.8.8.8"]
-install_disk      = "/dev/sda"
-
-# Worker Nodes Configuration - Add as many as you need
-worker_nodes = {
-  "worker-1" = {
-    ip       = "192.168.0.102"
-    hostname = "talos-worker-1"
-  }
-  "worker-2" = {
-    ip       = "192.168.0.103"
-    hostname = "talos-worker-2"
-  }
-  # Add more workers as needed...
-}
-
-# VM Configuration - Must match worker_nodes + 1 control plane
+# VM Configuration - Define your Talos Linux VMs here
 vms = {
-  "talos-controlplane" = {
+  "talos-vm-1" = {
     node_name      = "pve"
     iso_file       = "local:iso/talos-linux.iso"
     cores          = 4
@@ -44,7 +17,7 @@ vms = {
     network_model  = "virtio"
     network_bridge = "vmbr0"
   }
-  "talos-worker-1" = {
+  "talos-vm-2" = {
     node_name      = "pve"
     iso_file       = "local:iso/talos-linux.iso"
     cores          = 2
@@ -55,5 +28,5 @@ vms = {
     network_model  = "virtio"
     network_bridge = "vmbr0"
   }
-  # Add more worker VMs to match worker_nodes...
+  # Add more VMs as needed...
 }
