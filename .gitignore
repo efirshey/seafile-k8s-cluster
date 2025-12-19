@@ -5,7 +5,7 @@
 cluster-nodes/
 k8s-configurations/secrets.yaml
 k8s-configurations/seafile-config.conf
-seafile-config.conf
+seafile-seahub-config.yaml
 
 # Terraform files
 **/.terraform/*
