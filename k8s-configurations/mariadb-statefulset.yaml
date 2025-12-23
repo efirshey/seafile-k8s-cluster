@@ -28,16 +28,9 @@ spec:
                 secretKeyRef:
                   name: mariadb-secret
                   key: MARIADB_DATABASE
-            - name: MARIADB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: mariadb-secret
-                  key: MARIADB_USER
-            - name: MARIADB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mariadb-secret
-                  key: MARIADB_PASSWORD
+            # NOTE: MARIADB_USER and MARIADB_PASSWORD are REMOVED.
+            # Seafile connects as root (using DB_ROOT_PASSWD) and creates the 'seafile' user itself.
+            # This is the correct flow according to Seafile documentation.
             - name: MARIADB_AUTO_UPGRADE
               valueFrom:
                 secretKeyRef:

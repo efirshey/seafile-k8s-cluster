@@ -19,13 +19,19 @@ spec:
           env:
             - name: DB_HOST
               value: "mariadb"
+            # DB_ROOT_PASSWD: Root password for MariaDB. Seafile connects as root FIRST to create the 'seafile' user.
+            # Must match MARIADB_ROOT_PASSWORD in mariadb-secret.
+            # After initial setup, this can be removed for security (Seafile will use MYSQL_USER for normal operations).
             - name: DB_ROOT_PASSWD
               valueFrom:
                 secretKeyRef:
                   name: seafile-secret
                   key: DB_ROOT_PASSWD
+            # MYSQL_USER: Username for the database user that Seafile will CREATE during initialization.
+            # Seafile connects as root (DB_ROOT_PASSWD) and creates this user with MYSQL_USER_PASSWORD.
             - name: MYSQL_USER
               value: "seafile"
+            # MYSQL_USER_PASSWORD: Password for the 'seafile' user that Seafile will create during initialization.
             - name: MYSQL_USER_PASSWORD
               valueFrom:
                 secretKeyRef:
